@@ -1,0 +1,10 @@
+filebeat.inputs:
+  - type: container
+    paths:
+      - '/var/lib/docker/containers/*/*.log' # Collects all container logs automatically
+
+processors:
+  - add_docker_metadata: ~ # Enriches logs with container names, image names, etc.
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
