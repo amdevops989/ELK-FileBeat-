@@ -7,3 +7,6 @@ helm install kibana elastic/kibana -f values-kb.yaml -n elk
 kubectl get secret elasticsearch-master-credentials -n elk -o jsonpath='{.data.password}' | base64 --decode; echo
 
 use the username elastic
+
+
+helm install logstash elastic/logstash -f values-ls.yaml -n elk
