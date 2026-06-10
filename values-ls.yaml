@@ -27,6 +27,24 @@ logstashPipeline:
       }
     }
 
+    # --- NEW FILTER ENGINE ---
+    filter {
+      # Only try to parse if the log message looks like a standard K8s Go log
+      if [message] =~ /^[IWEF]\d{4}/ {
+        grok {
+          match => { 
+            "message" => "^%{WORD:log_level}%{NOTSPACE:k8s_timestamp}\s+%{NUMBER:thread_id}\s+%{NOTSPACE:source_file}:%{NUMBER:line_number}\]\s+%{GREEDYDATA:clean_message}" 
+          }
+        }
+        
+        # Map the single letter level to readable names
+        if [log_level] == "I" { mutate { replace => { "log_level" => "INFO" } } }
+        else if [log_level] == "W" { mutate { replace => { "log_level" => "WARN" } } }
+        else if [log_level] == "E" { mutate { replace => { "log_level" => "ERROR" } } }
+        else if [log_level] == "F" { mutate { replace => { "log_level" => "FATAL" } } }
+      }
+    }
+
     output {
       elasticsearch {
         hosts => ["https://elasticsearch-master:9200"]
