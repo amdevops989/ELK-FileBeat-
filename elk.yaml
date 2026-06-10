@@ -18,12 +18,12 @@ spec:
         - name: elasticsearch
           env:
           - name: ES_JAVA_OPTS
-            value: "-Xms512m -Xmx512m"
+            value: "-Xms1g -Xmx1g"
           resources:
             limits:
-              memory: 1Gi
+              memory: 2Gi
             requests:
-              memory: 768Mi
+              memory: 1Gi
 ---
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
@@ -35,23 +35,24 @@ spec:
   count: 1
   elasticsearchRef:
     name: elasticsearch
-  secureSettings: []
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   config:
-    elasticsearch.hosts: ["http://elasticsearch-es-http:9200"]
+    elasticsearch.hosts: ["http://elasticsearch-es-http.elk.svc.cluster.local:9200"]
   podTemplate:
     spec:
       containers:
       - name: kibana
-        # --- INJECT THIS ENV BLOCK ---
         env:
         - name: NODE_OPTIONS
-          value: "--max-old-space-size=400"
-        # -----------------------------
+          value: "--max-old-space-size=600"
         resources:
           limits:
-            memory: 512Mi
+            memory: 800Mi
           requests:
-            memory: 256Mi
+            memory: 512Mi
 ---
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
@@ -79,9 +80,9 @@ spec:
         - name: filebeat
           resources:
             limits:
-              memory: 150Mi
+              memory: 200Mi
             requests:
-              memory: 50Mi
+              memory: 100Mi
           volumeMounts:
           - name: varlogcontainers
             mountPath: /var/log/containers
