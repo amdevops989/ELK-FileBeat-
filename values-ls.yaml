@@ -43,3 +43,16 @@ extraEnvs:
       secretKeyRef:
         name: elasticsearch-master-credentials
         key: password
+
+# Add this block anywhere in your values-ls.yaml
+service:
+  type: ClusterIP
+  ports:
+    - name: beats
+      port: 5044
+      protocol: TCP
+      targetPort: 5044
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080

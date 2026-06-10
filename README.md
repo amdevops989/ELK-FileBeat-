@@ -10,3 +10,7 @@ use the username elastic
 
 
 helm install logstash elastic/logstash -f values-ls.yaml -n elk
+
+curl -XPOST 'http://localhost:9600' \
+-H 'Content-Type: application/json' \
+-d '{"message": "Hello ELK Stack! Testing my Logstash pipeline.", "environment": "minikube", "status": "operational"}'
