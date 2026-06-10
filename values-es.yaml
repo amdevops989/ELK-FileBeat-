@@ -12,3 +12,6 @@ volumeClaimTemplate:
     requests:
       # A modest 5GB for testing
       storage: 5Gi
+
+
+  
