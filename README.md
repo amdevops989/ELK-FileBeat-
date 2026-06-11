@@ -16,3 +16,8 @@ curl -XPOST 'http://localhost:9600' \
 -d '{"message": "Hello ELK Stack! Testing my Logstash pipeline.", "environment": "minikube", "status": "operational"}'
 
  helm install filebeat elastic/filebeat -f values-fb.yaml -n elk
+
+
+## test 
+kubectl run real-nginx --image=nginx:alpine -n default
+kubectl exec -it real-nginx -n default -- watch -n 1 curl -s http://localhost/
